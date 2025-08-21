@@ -109,12 +109,13 @@ services:
 #      - ./infrastructure/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     restart: unless-stopped
 
-#  kafka-topics-generator:
-#    image: confluentinc/cp-kafka
-#    environment:
-#      KAFKA_PROCESS_ROLES: broker,controller
-#      KAFKA_CLUSTER_ID: "1"
-#    entrypoint: [ '/bin', '-c' ]
-#    entrypoint: [ '/opt/kafka/bin', '-c' ]
-#    command: "sh kafka-topics.sh --bootstrap-server localhost:19092 --topic sandbox --create --partitions 3 --replication-factor 2"
-#    command: "echo -e 'pwd'"
+  # временный контейнер, который дожидается контейнер "broker-1", через который создает топик "sandbox"
+  kafka-topics-generator:
+    image: apache/kafka:latest
+    container_name: topics-generator
+    ports:
+      - 29093:9093
+    depends_on:
+      - broker-1
+    command: "/opt/kafka/bin/kafka-topics.sh --bootstrap-server broker-1:19092 --topic sandbox --create --partitions 3 --replication-factor 2"
+
