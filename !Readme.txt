@@ -43,8 +43,13 @@
 	-- создание топика:
 	a) из терминала без захода в контейнер:
 	docker exec -it a7052a8605b7 /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:19092 --topic sandbox --create --partitions 3 --replication-factor 2
+	    или с использование имени одного из контейнеров:
+    docker exec -it broker-1 /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:19092 --topic sandbox --create --partitions 3 --replication-factor 2
+
 	b) из контейнера после захода в него в терминале через docker exec (!!!заходить нужно в контейнер типа apache/kafka)
 	sh kafka-topics.sh --bootstrap-server localhost:19092 --topic sandbox --create --partitions 3 --replication-factor 2
+
+    c) через docker-compose.yml с помощью временного контейнера "topics-generator"
 
 	-- статус топика:
 	sh kafka-topics.sh --bootstrap-server localhost:19092 --topic sandbox --describe
